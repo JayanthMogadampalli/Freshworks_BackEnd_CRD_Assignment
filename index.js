@@ -1,30 +1,17 @@
 var express = require('express')
+var app = express()
 var datastore = require('data-store')
 var port = process.env.PORT || 3000
 var bodyparser = require('body-parser')
-
-
-
-
-
-
-
-var app = express()
-
-
-    -
-    configure middlewares
+var store
+    
+//     Configure middlewares
 
 app.use(bodyparser.urlencoded({
     extended: false
 }))
 
-
-
-
-
-
-//@get /
+//Get for base URL /
 
 app.get('/', (req, res) => {
     res.json({
@@ -32,9 +19,7 @@ app.get('/', (req, res) => {
     })
 })
 
-
-var store
-//@create new datastore
+//Create new datastore
 app.get('/:filename', (req, res) => {
     store = new datastore({
         path: `./data-store/${req.params.filename}.json`
@@ -45,8 +30,8 @@ app.get('/:filename', (req, res) => {
 
 
 
-//@post/:filename/create
-app.post('/:filename/update', (req, res) => {
+//Post/:filename/create
+app.post('/:filename/create', (req, res) => {
 
     store = new datastore({
         path: `./data-store/${req.params.filename}.json`
@@ -55,19 +40,19 @@ app.post('/:filename/update', (req, res) => {
     Object.entries(req.body).forEach(entry => {
         if (!store.hasOwn(entry[0])) {
 
-            store.set(entry[0], entry[1])
+            store.set(arr[0], entry[1])
         }
-
+       
     })
     res.json(JSON.parse(store.json(null, 2)))
-
+ 
 
 
 
 })
 
 
-//@get/:filename/getvalue
+//Get/:filename/getvalue
 
 app.get('/:filename/getvalue', (req, res) => {
 
@@ -94,15 +79,15 @@ app.get('/:filename/getvalue', (req, res) => {
 })
 
 //delete    
-//@post/:filename/delete
-app.delete('/:filename/delete', (req, res) => {
+//Delete/:filename/delkey
+app.delete('/:filename/delkey', (req, res) => {
     store = new datastore({
         path: `./data-store/${req.params.filename}.json`
     })
-    var count = 0
+    var cnt = 0
     Object.entries(req.body).forEach(entry => {
         if (store.hasOwn(entry[0])) {
-            count++;
+            cnt++;
             store.del(entry[0])
 
         } else {
@@ -112,13 +97,13 @@ app.delete('/:filename/delete', (req, res) => {
         }
 
     })
-    if (count == 0) {
+    if (cnt == 0) {
         res.json({
-            status: "No such key or no key selected"
+            status: "No such key is present"
         })
     }
     res.json({
-        status: "requested keys are deleted"
+        status: "requested keys are Removed"
     })
 
 
